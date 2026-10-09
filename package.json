@@ -53,7 +53,7 @@
         "lint:fix": "biome check --write .",
         "format": "biome format --write .",
         "check:types": "tsc --noEmit",
-        "check:runtime": "node --input-type=module -e \"await import('./dist/index.mjs')\" && node -e \"require('./dist/index.cjs')\"",
+        "check:runtime": "node test/runtime/smoke.mjs && node test/runtime/smoke.cjs",
         "check:exports": "attw --pack .",
         "check:package": "publint",
         "check:unused": "knip",

@@ -124,6 +124,17 @@ yarn test:e2e      # E2E tests (requires Docker)
 
 SWC is required for tests because Vitest's esbuild transform doesn't support `emitDecoratorMetadata`, which NestJS dependency injection relies on.
 
+`yarn check:runtime` (run after `yarn build`) boots a small NestJS app against both `dist/index.mjs` and `dist/index.cjs` to catch module-format issues.
+
+### Testing against another NestJS major
+
+The lockfile pins NestJS 12. CI also runs against NestJS 11 by overriding the NestJS packages after install. To reproduce locally (don't commit the resulting `package.json`/`yarn.lock` changes):
+
+```sh
+yarn add --dev "@nestjs/common@^11" "@nestjs/core@^11" "@nestjs/platform-express@^11" "@nestjs/testing@^11"
+yarn check:types && yarn build && yarn check:runtime && yarn test
+```
+
 ## Pull Request Guidelines
 
 - Keep PRs focused on a single change.

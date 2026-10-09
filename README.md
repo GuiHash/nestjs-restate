@@ -43,10 +43,16 @@ npm install nestjs-restate @restatedev/restate-sdk @restatedev/restate-sdk-clien
 
 | Package | Version |
 |---|---|
-| `@nestjs/common` | `^10.0.0 \|\| ^11.0.0` |
-| `@nestjs/core` | `^10.0.0 \|\| ^11.0.0` |
+| `@nestjs/common` | `^10.0.0 \|\| ^11.0.0 \|\| ^12.0.0` |
+| `@nestjs/core` | `^10.0.0 \|\| ^11.0.0 \|\| ^12.0.0` |
 | `@restatedev/restate-sdk` | `^1.10.4` |
 | `@restatedev/restate-sdk-clients` | `^1.10.4` |
+
+CI runs the test suite against NestJS 11 and NestJS 12.
+
+### NestJS 12 and CommonJS
+
+`nestjs-restate` ships both ESM (`import`) and CommonJS (`require`) builds. NestJS 12 is published as ESM only, so a CommonJS application on NestJS 12 loads it through Node's `require(esm)` support, which needs **Node.js 20.19+ or 22.12+**. On older Node versions, `require("nestjs-restate")` fails with `ERR_REQUIRE_ESM`. ESM applications are not affected.
 
 ### Running Restate
 

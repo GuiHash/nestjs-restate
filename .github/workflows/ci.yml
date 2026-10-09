@@ -11,7 +11,12 @@ permissions:
 
 jobs:
   ci:
+    name: ci (NestJS ${{ matrix.nest }})
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        nest: ["11", "12"]
     steps:
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
 
@@ -23,6 +28,17 @@ jobs:
 
       - name: Install dependencies
         run: yarn install --immutable
+
+      - name: Install NestJS ${{ matrix.nest }}
+        run: >-
+          yarn add --dev
+          "@nestjs/common@^${{ matrix.nest }}"
+          "@nestjs/core@^${{ matrix.nest }}"
+          "@nestjs/platform-express@^${{ matrix.nest }}"
+          "@nestjs/testing@^${{ matrix.nest }}"
+        env:
+          # The matrix overrides the locked NestJS version, so the lockfile is expected to change
+          YARN_ENABLE_IMMUTABLE_INSTALLS: "false"
 
       - name: Lint
         run: yarn lint
@@ -40,6 +56,7 @@ jobs:
         run: yarn test:coverage
 
       - name: Upload coverage
+        if: matrix.nest == '12'
         uses: codecov/codecov-action@671740ac38dd9b0130fbe1cec585b89eea48d3de # v5
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
@@ -78,8 +95,13 @@ jobs:
         run: npx pkg-pr-new publish
 
   e2e:
+    name: e2e (NestJS ${{ matrix.nest }})
     runs-on: ubuntu-latest
     needs: ci
+    strategy:
+      fail-fast: false
+      matrix:
+        nest: ["11", "12"]
     steps:
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
 
@@ -91,6 +113,17 @@ jobs:
 
       - name: Install dependencies
         run: yarn install --immutable
+
+      - name: Install NestJS ${{ matrix.nest }}
+        run: >-
+          yarn add --dev
+          "@nestjs/common@^${{ matrix.nest }}"
+          "@nestjs/core@^${{ matrix.nest }}"
+          "@nestjs/platform-express@^${{ matrix.nest }}"
+          "@nestjs/testing@^${{ matrix.nest }}"
+        env:
+          # The matrix overrides the locked NestJS version, so the lockfile is expected to change
+          YARN_ENABLE_IMMUTABLE_INSTALLS: "false"
 
       - name: E2E tests
         run: yarn test:e2e
